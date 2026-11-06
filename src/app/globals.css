@@ -1,0 +1,450 @@
+@import "tailwindcss";
+
+/*
+ * Palette
+ *   ink        #0a0a0b  page background
+ *   panel      #141416  cards
+ *   line       #26262a  borders
+ *   fog        #e7e7e9  headline / primary text
+ *   ash        #8e8e96  secondary text
+ *   violet → pink → tangerine   the signature gradient
+ */
+@theme {
+  --color-ink: #0a0a0b;
+  --color-panel: #141416;
+  --color-line: #26262a;
+  --color-fog: #e7e7e9;
+  --color-ash: #8e8e96;
+  --color-violet: #8b5cf6;
+  --color-pink: #f0509b;
+  --color-tangerine: #fb8a3c;
+
+  --color-live: #4ade80;
+
+  --container-page: 75rem;
+
+  --font-sans: var(--font-archivo), system-ui, sans-serif;
+
+  --text-display: clamp(3.25rem, 8.6vw, 9rem);
+  --text-display--line-height: 0.86;
+  --text-display--letter-spacing: -0.045em;
+  --text-display--font-weight: 900;
+  --text-h2: clamp(2.5rem, 1.6rem + 2.4vw, 3.5rem);
+  --text-h2--line-height: 0.92;
+  --text-h2--letter-spacing: -0.035em;
+  --text-h2--font-weight: 900;
+  --text-h3: clamp(1.75rem, 1.2rem + 1.6vw, 2.5rem);
+  --text-h3--line-height: 0.98;
+  --text-h3--letter-spacing: -0.025em;
+  --text-h3--font-weight: 800;
+  --text-statement: clamp(1.5rem, 1rem + 1.8vw, 2.375rem);
+  --text-statement--line-height: 1.18;
+  --text-statement--letter-spacing: -0.02em;
+  --text-statement--font-weight: 600;
+  --text-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  --text-lead--line-height: 1.5;
+  --text-lead--letter-spacing: -0.005em;
+  --text-lead--font-weight: 400;
+  --text-label: 0.75rem;
+  --text-label--line-height: 1.2;
+  --text-label--letter-spacing: 0.14em;
+  --text-label--font-weight: 700;
+  --text-ticker: 0.8125rem;
+  --text-ticker--line-height: 1;
+  --text-ticker--letter-spacing: 0.22em;
+  --text-ticker--font-weight: 600;
+
+  --animate-float: float 8s ease-in-out infinite;
+}
+
+@utility bg-signature {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-violet),
+    var(--color-pink),
+    var(--color-tangerine)
+  );
+}
+
+@custom-variant stack (@media (min-width: 48rem) and (min-height: 43.75rem));
+
+:root {
+  --gutter: clamp(1.25rem, 0.6rem + 2.8vw, 3rem);
+  --section-y: clamp(4rem, 2rem + 6vw, 8rem);
+}
+
+@utility container-page {
+  width: 100%;
+  max-width: calc(var(--container-page) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+@utility section-y {
+  padding-block: var(--section-y);
+}
+
+@utility pill-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  padding: 0.875rem 1.5rem;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  background-image: linear-gradient(
+    90deg,
+    var(--color-violet),
+    var(--color-pink),
+    var(--color-tangerine)
+  );
+  box-shadow: 0 10px 36px rgb(240 80 155 / 0.3);
+  transition:
+    translate 0.3s,
+    box-shadow 0.3s;
+  &:hover {
+    translate: 0 -2px;
+    box-shadow: 0 16px 48px rgb(240 80 155 / 0.45);
+  }
+}
+
+@utility pill-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  padding: 0.875rem 1.5rem;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-fog);
+  border: 1px solid var(--color-line);
+  transition: border-color 0.3s;
+  &:hover {
+    border-color: var(--color-fog);
+  }
+}
+
+@utility link-underline {
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px
+    no-repeat;
+  transition: background-size 0.4s cubic-bezier(0.2, 0.7, 0.1, 1);
+  &:hover,
+  &:focus-visible {
+    background-size: 100% 1px;
+  }
+}
+
+@utility bento {
+  border-radius: 1.5rem;
+  border: 1px solid var(--color-line);
+  background: var(--color-panel);
+  padding: 1.5rem;
+  @media (width >= 48rem) {
+    padding: 2rem;
+  }
+}
+
+@utility wordmark {
+  background-image: linear-gradient(
+    180deg,
+    var(--color-fog) 0%,
+    rgb(231 231 233 / 0.35) 55%,
+    rgb(231 231 233 / 0) 92%
+  );
+  background-clip: text;
+  color: transparent;
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* Native smooth anchors only as a no-JS fallback; Lenis handles them otherwise. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.lenis) {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-fog);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Static film grain. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.045;
+  background-size: 160px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+::selection {
+  background: var(--color-pink);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-pink);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* The glossy 3D orb that stands in for an avatar. */
+.orb {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  clip-path: circle(50%);
+  border-radius: 9999px;
+  background:
+    radial-gradient(
+      circle at 70% 82%,
+      rgb(251 138 60 / 0.9) 0%,
+      rgb(251 138 60 / 0) 48%
+    ),
+    radial-gradient(
+      circle at 20% 70%,
+      rgb(139 92 246 / 0.95) 0%,
+      rgb(139 92 246 / 0) 55%
+    ),
+    radial-gradient(
+      circle at 46% 38%,
+      #f58bbd 0%,
+      var(--color-pink) 35%,
+      #8a1f55 72%,
+      #1c0613 100%
+    );
+  box-shadow:
+    inset -30px -44px 80px rgb(0 0 0 / 0.55),
+    inset 14px 18px 44px rgb(255 255 255 / 0.12),
+    inset 0 0 0 1px rgb(255 255 255 / 0.06);
+}
+
+.orb::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background: conic-gradient(
+    from 90deg,
+    transparent 0deg,
+    rgb(255 255 255 / 0.16) 50deg,
+    transparent 110deg,
+    rgb(139 92 246 / 0.22) 190deg,
+    transparent 250deg,
+    rgb(251 138 60 / 0.2) 310deg,
+    transparent 360deg
+  );
+  mix-blend-mode: soft-light;
+  animation: orb-spin 26s linear infinite;
+}
+
+.orb-light {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(
+      circle at 32% 26%,
+      rgb(255 255 255 / 0.9) 0 2.5%,
+      rgb(255 255 255 / 0.35) 7%,
+      transparent 20%
+    ),
+    radial-gradient(circle at 74% 86%, rgb(255 255 255 / 0.18), transparent 22%);
+}
+
+.orb-glow {
+  position: absolute;
+  inset: -30%;
+  z-index: -1;
+  border-radius: 9999px;
+  background: radial-gradient(
+    closest-side,
+    rgb(240 80 155 / 0.32),
+    rgb(139 92 246 / 0.14) 55%,
+    transparent
+  );
+  filter: blur(28px);
+}
+
+.orb-floor {
+  position: absolute;
+  left: 50%;
+  bottom: -10%;
+  width: 70%;
+  height: 12%;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    rgb(240 80 155 / 0.28),
+    transparent
+  );
+  filter: blur(8px);
+}
+
+/* Hero backdrop: a faint dot grid fading out from the centre, plus a soft aurora. */
+.hero-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero-backdrop::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    rgb(255 255 255 / 0.09) 1px,
+    transparent 1.5px
+  );
+  background-size: 26px 26px;
+  mask-image: radial-gradient(
+    ellipse 60% 55% at 50% 45%,
+    #000 15%,
+    transparent 72%
+  );
+}
+
+.hero-backdrop::after {
+  content: "";
+  position: absolute;
+  top: 6%;
+  left: 50%;
+  width: min(72rem, 130vw);
+  height: 30rem;
+  translate: -50% 0;
+  background:
+    radial-gradient(closest-side at 32% 50%, rgb(139 92 246 / 0.14), transparent),
+    radial-gradient(closest-side at 68% 50%, rgb(240 80 155 / 0.1), transparent);
+  filter: blur(40px);
+}
+
+/* Profile picture: a slowly turning gradient ring (like a story ring) around the photo. */
+.dp-ring {
+  position: relative;
+  isolation: isolate;
+  border-radius: 9999px;
+  /* Ring thickness = padding minus the dark gap below (3px). */
+  padding: clamp(6px, 0.55vw, 8px);
+}
+
+.dp-ring::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: conic-gradient(
+    from 0deg,
+    var(--color-violet),
+    var(--color-pink),
+    var(--color-tangerine),
+    var(--color-pink),
+    var(--color-violet)
+  );
+  animation: orb-spin 12s linear infinite;
+}
+
+.dp-photo {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: var(--color-panel);
+  /* A thin dark gap between the ring and the photo. */
+  box-shadow: 0 0 0 3px var(--color-ink);
+}
+
+/* Soft glass highlight; moves with the pointer via HeroMotion. */
+.dp-sheen {
+  position: absolute;
+  inset: -10%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 30% 22%,
+    rgb(255 255 255 / 0.28),
+    transparent 40%
+  );
+  mix-blend-mode: soft-light;
+}
+
+.dp-float {
+  animation: dp-float 8s ease-in-out infinite;
+}
+
+@keyframes dp-float {
+  50% {
+    translate: 0 -10px;
+  }
+}
+
+@keyframes orb-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    translate: 0 0;
+    rotate: 0deg;
+  }
+  50% {
+    translate: 0 -12px;
+    rotate: 3deg;
+  }
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.enter {
+  animation: enter 0.9s cubic-bezier(0.2, 0.7, 0.1, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .enter,
+  .animate-float,
+  .animate-ping,
+  .orb::before,
+  .dp-ring::before,
+  .dp-float {
+    animation: none;
+  }
+}
